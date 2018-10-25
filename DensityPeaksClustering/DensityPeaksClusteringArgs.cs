@@ -1,10 +1,10 @@
 ﻿namespace DensityPeaksClustering
 {
-    public class DensityPeaksClusteringArgs
+    internal class DensityPeaksClusteringArgs
     {
     }
 
-    public class MultiManifoldClusteringArgs : DensityPeaksClusteringArgs
+    internal class MultiManifoldClusteringArgs : DensityPeaksClusteringArgs
     {
         public readonly int k;
         public readonly int M;
@@ -16,7 +16,7 @@
         }
     }
 
-    public class RodriguezAndLaioDPCClusteringArgs : DensityPeaksClusteringArgs
+    internal class RodriguezAndLaioDPCClusteringArgs : DensityPeaksClusteringArgs
     {
         public readonly int distanceCutoff;
 
@@ -27,7 +27,7 @@
     }
 
 
-    public class KNNClusteringArgs : DensityPeaksClusteringArgs
+    internal class KNNClusteringArgs : DensityPeaksClusteringArgs
     {
         public readonly int k;
 

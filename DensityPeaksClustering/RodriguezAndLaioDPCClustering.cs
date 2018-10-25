@@ -2,7 +2,7 @@
 
 namespace DensityPeaksClustering
 {
-    public class RodriguezAndLaioDPCClustering : DensityPeaksClusteringBase
+    internal class RodriguezAndLaioDPCClustering : DensityPeaksClusteringBase
     {
         public override void ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
         {

@@ -1,12 +1,12 @@
 ﻿namespace DensityPeaksClustering
 {
-    public abstract class DensityFunction
+    internal abstract class DensityFunction
     {
         public abstract void ComputeLocalDensity(DistanceMatrix distanceMatrix,
             SampleClusteringVariables[] sampleClusteringVars, DensityPeaksClusteringArgs args);
     }
 
-    public class KNNDistanceDensityFunction : DensityFunction
+    internal class KNNDistanceDensityFunction : DensityFunction
     {
         public override void ComputeLocalDensity(DistanceMatrix distanceMatrix,
             SampleClusteringVariables[] sampleClusteringVars, DensityPeaksClusteringArgs args)
@@ -30,7 +30,7 @@
         }
     }
 
-    public class PointsUnderDistanceCutoffDistanceDensityFunction : DensityFunction
+    internal class PointsUnderDistanceCutoffDistanceDensityFunction : DensityFunction
     {
         public override void ComputeLocalDensity(DistanceMatrix distanceMatrix,
             SampleClusteringVariables[] sampleClusteringVars, DensityPeaksClusteringArgs args)

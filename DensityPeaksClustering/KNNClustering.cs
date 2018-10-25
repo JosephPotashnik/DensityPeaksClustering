@@ -1,6 +1,6 @@
 ﻿namespace DensityPeaksClustering
 {
-    public class KNNClustering : DensityPeaksClusteringBase
+    internal class KNNClustering : DensityPeaksClusteringBase
     {
         public override void ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
         {

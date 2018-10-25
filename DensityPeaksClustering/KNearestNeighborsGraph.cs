@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DensityPeaksClustering
 {
-    public class Neighbor : IComparable<Neighbor>
+    internal class Neighbor : IComparable<Neighbor>
     {
         public double Distance { get; set; }
         public int SampleIndex { get; set; }
@@ -14,7 +14,7 @@ namespace DensityPeaksClustering
         }
     }
 
-    public class KNearestNeighborsGraph
+    internal class KNearestNeighborsGraph
     {
         private HashSet<int>[] mutualNeighbors;
         public Neighbor[][] neighborMatrix;

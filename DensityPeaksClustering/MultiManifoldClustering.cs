@@ -1,6 +1,6 @@
 ﻿namespace DensityPeaksClustering
 {
-    public class MultiManifoldClustering : DensityPeaksClusteringBase
+    internal class MultiManifoldClustering : DensityPeaksClusteringBase
     {
         private static int GetMFromNumberOfSamples(int numberOfSamples)
         {

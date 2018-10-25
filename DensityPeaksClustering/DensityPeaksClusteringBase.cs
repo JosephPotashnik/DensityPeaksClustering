@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DensityPeaksClustering
 {
-    public abstract class DensityPeaksClusteringBase
+    internal abstract class DensityPeaksClusteringBase
     {
         protected DensityPeaksClusteringArgs args;
 
