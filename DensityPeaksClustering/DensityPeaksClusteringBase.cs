@@ -19,7 +19,7 @@ namespace DensityPeaksClustering
             //to cluster, execute the steps in the following order:
 
             ////2. Compute rho, local densities
-            ComputeRho(dMatrix, samplesClusteringVars);
+            ComputeRho(dMatrix, samplesClusteringVars, args);
 
             var rhoDescending = samplesClusteringVars
                 .Select((x, index) => new Density {Value = x.Rho, SampleIndex = index}).OrderByDescending(x => x.Value)
@@ -44,7 +44,7 @@ namespace DensityPeaksClustering
             return samplesClusteringVars.Select(x => x.ClusterIndex).ToArray();
         }
 
-        public abstract void ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars);
+        public abstract void ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args);
         public abstract void PostProcessing(DensityPeaksClusteringArgs args);
 
         private void ComputeDelta(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars,

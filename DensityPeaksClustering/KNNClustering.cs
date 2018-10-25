@@ -2,13 +2,21 @@
 {
     public class KNNClustering : DensityPeaksClusteringBase
     {
-        public override void ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars)
+        public override void ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
         {
             var numberOfSamples = dMatrix.NumberOfSamples;
 
-            var k = GetKFromNumberOfSamples(numberOfSamples);
-            var nearestNeighbourGraph = new KNearestNeighborsGraph(dMatrix);
-            var distanceMatrixOfKNN = nearestNeighbourGraph.GetKNearestNeighbors(k);
+            var k = 0;
+            if (args is KNNClusteringArgs knnArgs)
+            {
+                k = knnArgs.k;
+            }
+
+            if (k == 0)
+                k = GetKFromNumberOfSamples(numberOfSamples);
+
+            var nearestNeighborGraph = new KNearestNeighborsGraph(dMatrix);
+            var distanceMatrixOfKNN = nearestNeighborGraph.GetKNearestNeighbors(k);
 
             DensityFunction densityFunction = new KNNDistanceDensityFunction();
             args = new KNNClusteringArgs(k);

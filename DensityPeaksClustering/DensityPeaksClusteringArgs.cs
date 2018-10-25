@@ -4,6 +4,18 @@
     {
     }
 
+    public class MultiManifoldClusteringArgs : DensityPeaksClusteringArgs
+    {
+        public readonly int k;
+        public readonly int M;
+
+        public MultiManifoldClusteringArgs(int k, int M)
+        {
+            this.k = k;
+            this.M = M;
+        }
+    }
+
     public class RodriguezAndLaioDPCClusteringArgs : DensityPeaksClusteringArgs
     {
         public readonly int distanceCutoff;
@@ -17,11 +29,11 @@
 
     public class KNNClusteringArgs : DensityPeaksClusteringArgs
     {
-        public readonly int NearestKNeighbours;
+        public readonly int k;
 
         public KNNClusteringArgs(int k)
         {
-            NearestKNeighbours = k;
+            this.k = k;
         }
     }
 }

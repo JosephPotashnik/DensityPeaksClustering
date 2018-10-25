@@ -25,7 +25,7 @@
                         sum += val;
                 }
 
-                sampleClusteringVars[i].Rho = args1.NearestKNeighbours / sum;
+                sampleClusteringVars[i].Rho = args1.k / sum;
             }
         }
     }

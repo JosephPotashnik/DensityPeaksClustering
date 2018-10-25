@@ -13,19 +13,21 @@ namespace DensityPeaksClustering
         {
             var distanceFunction = DistanceFunctionFactory.CreateDistanceFunction(distanceType);
             var dMatrix = new DistanceMatrix(matrix, distanceFunction);
+            var manifoldArgs = new MultiManifoldClusteringArgs(k,M);
             DensityPeaksClusteringBase clusterizer = new MultiManifoldClustering();
-            return clusterizer.Clusterize(dMatrix, new DensityPeaksClusteringArgs());
+            return clusterizer.Clusterize(dMatrix, manifoldArgs);
         }
 
         //the matrix matrix is expected to be in the following structure: array of arrays, such that:
         //float[numberOfSamples][numberOfDimensions] 
-        public static int[] KNN(float[][] matrix,
+        public static int[] KNN(float[][] matrix, int k = 0,
             DistanceFunctionType distanceType = DistanceFunctionType.EuclideanDistance)
         {
             var distanceFunction = DistanceFunctionFactory.CreateDistanceFunction(distanceType);
             var dMatrix = new DistanceMatrix(matrix, distanceFunction);
+            var knnArgs = new KNNClusteringArgs(k);
             DensityPeaksClusteringBase clusterizer = new KNNClustering();
-            return clusterizer.Clusterize(dMatrix, new DensityPeaksClusteringArgs());
+            return clusterizer.Clusterize(dMatrix, knnArgs);
         }
 
         //the matrix matrix is expected to be in the following structure: array of arrays, such that:
