@@ -20,7 +20,7 @@
             return dMatrix;
         }
 
-        public override void ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
+        public override DistanceMatrix ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
         {
             var numberOfSamples = dMatrix.NumberOfSamples;
             var M = 0;
@@ -50,7 +50,6 @@
             var nearestNeighborGraphForMNeighbors = new KNearestNeighborsGraph(dMatrix);
             nearestNeighborGraphForMNeighbors.GetKNearestNeighbors(M);
 
-
             for (var i = 0; i < numberOfSamples; i++)
             {
                 double sum = 0;
@@ -67,6 +66,8 @@
             }
 
             //samplesClusteringVars.Rho values are now calculated.
+
+            return manifoldDistanceMatrix;
         }
 
         public override void PostProcessing(DensityPeaksClusteringArgs args)

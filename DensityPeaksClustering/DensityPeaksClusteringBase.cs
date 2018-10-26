@@ -19,14 +19,14 @@ namespace DensityPeaksClustering
             //to cluster, execute the steps in the following order:
 
             ////2. Compute rho, local densities
-            ComputeRho(dMatrix, samplesClusteringVars, args);
+            var deltaDistanceMatrix = ComputeRho(dMatrix, samplesClusteringVars, args);
 
             var rhoDescending = samplesClusteringVars
                 .Select((x, index) => new Density {Value = x.Rho, SampleIndex = index}).OrderByDescending(x => x.Value)
                 .ToArray();
 
             ////3. compute delta, the distance to the nearest neighbor with higher density
-            ComputeDelta(dMatrix, samplesClusteringVars, rhoDescending);
+            ComputeDelta(deltaDistanceMatrix, samplesClusteringVars, rhoDescending);
 
             ////4. find cluster centers.
             var clusterCounter = FindClusterCenters(samplesClusteringVars, rhoDescending);
@@ -44,20 +44,22 @@ namespace DensityPeaksClustering
             return samplesClusteringVars.Select(x => x.ClusterIndex).ToArray();
         }
 
-        public abstract void ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args);
+        public abstract DistanceMatrix ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args);
         public abstract void PostProcessing(DensityPeaksClusteringArgs args);
 
         private void ComputeDelta(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars,
             Density[] rhoDescending)
         {
-            samplesClusteringVars[rhoDescending[0].SampleIndex].Delta = dMatrix.MaxValue;
+            double maxDistance = dMatrix.Max;
+
+            samplesClusteringVars[rhoDescending[0].SampleIndex].Delta = maxDistance;
             samplesClusteringVars[rhoDescending[0].SampleIndex].NearestNeighborWithHigherDensity = -1;
-            samplesClusteringVars[rhoDescending[0].SampleIndex].Gamma = dMatrix.MaxValue * rhoDescending[0].Value;
+            samplesClusteringVars[rhoDescending[0].SampleIndex].Gamma = maxDistance * rhoDescending[0].Value;
             var numberOfSamples = dMatrix.NumberOfSamples;
 
             for (var i = 1; i < numberOfSamples; i++)
             {
-                var minDist = dMatrix.MaxValue;
+                var minDist = maxDistance;
                 var nearestNeighbor = -1;
                 var currentSample = samplesClusteringVars[rhoDescending[i].SampleIndex];
 
@@ -105,8 +107,9 @@ namespace DensityPeaksClustering
         {
             var clusterCounter = 0;
 
-            var potentialClusterCenters = CoarseTuning(samplesClusteringVars, rhoDescending);
-            //potentialClusterCenters = potentialClusterCenters.Union(FineTuning(samplesClusteringVars)).ToList();
+            //var potentialClusterCenters = CoarseTuning(samplesClusteringVars, rhoDescending);
+            var potentialClusterCenters = new List<int>();
+            potentialClusterCenters = potentialClusterCenters.Union(FineTuning(samplesClusteringVars)).ToList();
   
             //assign clusters indices to cluster centers.
             foreach (var i in potentialClusterCenters)

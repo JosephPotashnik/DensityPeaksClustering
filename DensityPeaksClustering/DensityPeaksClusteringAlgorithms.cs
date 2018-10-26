@@ -12,9 +12,9 @@ namespace DensityPeaksClustering
         /// </summary>
         /// <param name="matrix"> data for clustering, in arr[][] format </param>
         /// <see cref="float [number of samples][ dimension of sample]"/>
-        /// <param name="k"> k for k-nearest-neighbors </param>
+        /// <param name="k"> k for k-nearest-neighbors. Default value: 0 (in this case, k is taken to be log(number of samples)</param>
         /// <see cref="int"/>
-        /// <param name="M"> M for global cohesion, M-nearest neighbors</param>
+        /// <param name="M"> M for global cohesion,Default Value: 0 (in this case, M is taken to be 0.02*number of samples)</param>
         /// <see cref="int"/>
         /// <param name="distanceType"> distance type between samples, default is Euclidean distance</param>
         /// <returns>
@@ -37,7 +37,7 @@ namespace DensityPeaksClustering
         /// </summary>
         /// <param name="matrix"> data for clustering, in arr[][] format </param>
         /// <see cref="float [number of samples][ dimension of sample]"/>
-        /// <param name="k"> k for k-nearest-neighbors </param>
+        /// <param name="k"> k for k-nearest-neighbors. Default value: 0 (in this case, k is taken to be log(number of samples)</param>
         /// <see cref="int"/>
         /// <param name="distanceType"> distance type between samples, default is Euclidean distance</param>
         /// <returns>

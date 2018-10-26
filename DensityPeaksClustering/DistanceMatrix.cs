@@ -22,7 +22,6 @@ namespace DensityPeaksClustering
             for (var i = 0; i < NumberOfSamples; i++)
                 Distances[i] = new double[NumberOfSamples];
 
-            MaxValue = double.MinValue;
             int dimension = m[0].Length;
 
             double dist;
@@ -31,15 +30,12 @@ namespace DensityPeaksClustering
             {
                 //compute distance according to distance function between point i and point j in data.
                 dist = distanceFunction.GetDistance(m, i, j, dimension);
-
                 Distances[j][i] = Distances[i][j] = dist;
-                if (dist > MaxValue)
-                    MaxValue = dist;
+
             }
         }
 
         public int NumberOfSamples { get; set; }
-        public double MaxValue { get; set; }
 
         public double this[int i, int j]
         {
@@ -54,22 +50,25 @@ namespace DensityPeaksClustering
             set => Distances[i] = value;
         }
 
-        [OnDeserialized]
-        internal void OnDeserializedMethod(StreamingContext context)
+        internal double Max
         {
-            //a multidimensional array [,] length returns length of all elements,
-            //so use the number of elements along one dimension.
-            NumberOfSamples = Distances.GetLength(0);
-
-            MaxValue = double.MinValue;
-
-            double dist;
-            for (var i = 0; i < NumberOfSamples - 1; i++)
-            for (var j = i + 1; j < NumberOfSamples; j++)
+            get
             {
-                dist = Distances[i][j];
-                if (dist > MaxValue)
-                    MaxValue = dist;
+
+                NumberOfSamples = Distances.GetLength(0);
+
+                double max = double.MinValue;
+
+                double dist;
+                for (var i = 0; i < NumberOfSamples - 1; i++)
+                    for (var j = i + 1; j < NumberOfSamples; j++)
+                    {
+                        dist = Distances[i][j];
+                        if (!double.IsPositiveInfinity(dist) && dist > max)
+                            max = dist;
+                    }
+
+                return max;
             }
         }
 
@@ -78,7 +77,6 @@ namespace DensityPeaksClustering
             var dMatrix = new DistanceMatrix
             {
                 NumberOfSamples = numberOfSamples,
-                MaxValue = double.PositiveInfinity,
                 Distances = new double[numberOfSamples][]
             };
 

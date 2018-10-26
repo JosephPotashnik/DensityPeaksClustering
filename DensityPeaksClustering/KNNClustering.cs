@@ -2,7 +2,7 @@
 {
     internal class KNNClustering : DensityPeaksClusteringBase
     {
-        public override void ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
+        public override DistanceMatrix ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
         {
             var numberOfSamples = dMatrix.NumberOfSamples;
 
@@ -22,6 +22,8 @@
             args = new KNNClusteringArgs(k);
             densityFunction.ComputeLocalDensity(distanceMatrixOfKNN, samplesClusteringVars, args);
             //samplesClusteringVars.Rho values are now calculated.
+
+            return dMatrix;
         }
 
         public override void PostProcessing(DensityPeaksClusteringArgs args)
