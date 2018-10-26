@@ -14,17 +14,20 @@
         /// <see cref="int" />
         /// <param name="M"> M for global cohesion,Default Value: 0 (in this case, M is taken to be 0.02*number of samples)</param>
         /// <see cref="int" />
+        /// <param name="tuningType"> tuning type of cluster centers: default is Fine Tuning</param>
+        /// <see cref="ClusterCentersTuningType" />
         /// <param name="distanceType"> distance type between samples, default is Euclidean distance</param>
+        /// <see cref="DistanceFunctionType" />
         /// <returns>
         ///     array of cluster indices, with length as the number of samples cluster 0 = noise.
         ///     <see cref="int []" />
         /// </returns>
-        public static int[] MultiManifold(float[][] matrix, int k = 0, int M = 0,
+        public static int[] MultiManifold(float[][] matrix, int k = 0, int M = 0, ClusterCentersTuningType tuningType = ClusterCentersTuningType.FineTuning,
             DistanceFunctionType distanceType = DistanceFunctionType.EuclideanDistance)
         {
             var distanceFunction = DistanceFunctionFactory.CreateDistanceFunction(distanceType);
             var dMatrix = new DistanceMatrix(matrix, distanceFunction);
-            var manifoldArgs = new MultiManifoldClusteringArgs(k, M);
+            var manifoldArgs = new MultiManifoldClusteringArgs(k, M, tuningType);
             DensityPeaksClusteringBase clusterizer = new MultiManifoldClustering();
             return clusterizer.Clusterize(dMatrix, manifoldArgs);
         }
@@ -37,17 +40,19 @@
         /// <see cref="float [number of samples][ dimension of sample]" />
         /// <param name="k"> k for k-nearest-neighbors. Default value: 0 (in this case, k is taken to be log(number of samples)</param>
         /// <see cref="int" />
+        /// <param name="tuningType"> tuning type of cluster centers: default is Fine Tuning</param>
+        /// <see cref="ClusterCentersTuningType" />
         /// <param name="distanceType"> distance type between samples, default is Euclidean distance</param>
         /// <returns>
         ///     array of cluster indices, with length as the number of samples cluster 0 = noise.
         ///     <see cref="int []" />
         /// </returns>
-        public static int[] KNN(float[][] matrix, int k = 0,
+        public static int[] KNN(float[][] matrix, int k = 0, ClusterCentersTuningType tuningType = ClusterCentersTuningType.FineTuning,
             DistanceFunctionType distanceType = DistanceFunctionType.EuclideanDistance)
         {
             var distanceFunction = DistanceFunctionFactory.CreateDistanceFunction(distanceType);
             var dMatrix = new DistanceMatrix(matrix, distanceFunction);
-            var knnArgs = new KNNClusteringArgs(k);
+            var knnArgs = new KNNClusteringArgs(k, tuningType);
             DensityPeaksClusteringBase clusterizer = new KNNClustering();
             return clusterizer.Clusterize(dMatrix, knnArgs);
         }

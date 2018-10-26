@@ -6,8 +6,6 @@ namespace DensityPeaksClustering
 {
     internal abstract class DensityPeaksClusteringBase
     {
-        protected DensityPeaksClusteringArgs args;
-
         public int[] Clusterize(DistanceMatrix dMatrix, DensityPeaksClusteringArgs args)
         {
             var numberOfSamples = dMatrix.NumberOfSamples;
@@ -29,7 +27,7 @@ namespace DensityPeaksClustering
             ComputeDelta(deltaDistanceMatrix, samplesClusteringVars, rhoDescending);
 
             ////4. find cluster centers.
-            var clusterCounter = FindClusterCenters(samplesClusteringVars, rhoDescending);
+            var clusterCounter = FindClusterCenters(samplesClusteringVars, rhoDescending, args);
 
             ////no clusters found at all - return now with an array of cluster indices all equal to 0.
             if (clusterCounter == 0) return new int[numberOfSamples];
@@ -105,14 +103,28 @@ namespace DensityPeaksClustering
             }
         }
 
-        private int FindClusterCenters(SampleClusteringVariables[] samplesClusteringVars, Density[] rhoDescending)
+        private int FindClusterCenters(SampleClusteringVariables[] samplesClusteringVars, Density[] rhoDescending, DensityPeaksClusteringArgs args)
         {
             var clusterCounter = 0;
-
-            //var potentialClusterCenters = CoarseTuning(samplesClusteringVars, rhoDescending);
+            var potentialClusterCentersCoarse = new List<int>();
+            var potentialClusterCentersFine = new List<int>();
             var potentialClusterCenters = new List<int>();
-            potentialClusterCenters = potentialClusterCenters.Union(FineTuning(samplesClusteringVars)).ToList();
 
+            bool coarseTuning = args.TuningType.HasFlag(ClusterCentersTuningType.CoarseTuning);
+            bool fineTuning = args.TuningType.HasFlag(ClusterCentersTuningType.FineTuning);
+
+            if (coarseTuning)
+                potentialClusterCentersCoarse = CoarseTuning(samplesClusteringVars, rhoDescending);
+            else if (fineTuning)
+                potentialClusterCentersFine = FineTuning(samplesClusteringVars);
+
+            //if both tunings methods are used, intersect their results
+            if (coarseTuning && fineTuning)
+                potentialClusterCenters = potentialClusterCentersFine.Intersect(potentialClusterCentersCoarse).ToList();
+            //otherwise just use result of one of them (the other one is an empty list).
+            else
+                potentialClusterCenters = potentialClusterCentersFine.Union(potentialClusterCentersCoarse).ToList();
+ 
             //assign clusters indices to cluster centers.
             foreach (var i in potentialClusterCenters)
                 samplesClusteringVars[i].ClusterIndex = ++clusterCounter;

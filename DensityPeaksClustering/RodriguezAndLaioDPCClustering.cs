@@ -44,7 +44,7 @@ namespace DensityPeaksClustering
 
         private double[] FindMaximumDensitiesInBorderRegion(int clusterCounter)
         {
-            var args1 = args as RodriguezAndLaioDPCClusteringArgs;
+            //var args1 = args as RodriguezAndLaioDPCClusteringArgs;
 
             var maximumborderDensity = new double[clusterCounter + 1];
             for (var i = 0; i < clusterCounter + 1; i++)

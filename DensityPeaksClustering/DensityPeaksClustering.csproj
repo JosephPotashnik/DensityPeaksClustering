@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Joseph Potashnik</Authors>
+    <Company />
+    <Product />
+    <Description>This package offers several Density-Peaks based algorithms for clustering. 
+The core algorithm relies on Rodriguez and Laio 2014 (see http://science.sciencemag.org/content/344/6191/1492.full)
+</Description>
+    <RepositoryUrl>https://github.com/JosephPotashnik/DensityPeaksClustering</RepositoryUrl>
+    <Copyright>MIT License</Copyright>
+    <PackageLicenseUrl>https://github.com/JosephPotashnik/DensityPeaksClustering</PackageLicenseUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageTags>Clustering, Density, Density-Based clustering, Density Peaks</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
