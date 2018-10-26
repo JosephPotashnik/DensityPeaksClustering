@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace DensityPeaksClustering
@@ -12,7 +11,7 @@ namespace DensityPeaksClustering
         public DistanceMatrix()
         {
         }
-        
+
 
         public DistanceMatrix(float[][] m, IDistanceFunction distanceFunction)
         {
@@ -22,7 +21,7 @@ namespace DensityPeaksClustering
             for (var i = 0; i < NumberOfSamples; i++)
                 Distances[i] = new double[NumberOfSamples];
 
-            int dimension = m[0].Length;
+            var dimension = m[0].Length;
 
             double dist;
             for (var i = 0; i < NumberOfSamples - 1; i++)
@@ -31,7 +30,6 @@ namespace DensityPeaksClustering
                 //compute distance according to distance function between point i and point j in data.
                 dist = distanceFunction.GetDistance(m, i, j, dimension);
                 Distances[j][i] = Distances[i][j] = dist;
-
             }
         }
 
@@ -54,19 +52,18 @@ namespace DensityPeaksClustering
         {
             get
             {
-
                 NumberOfSamples = Distances.GetLength(0);
 
-                double max = double.MinValue;
+                var max = double.MinValue;
 
                 double dist;
                 for (var i = 0; i < NumberOfSamples - 1; i++)
-                    for (var j = i + 1; j < NumberOfSamples; j++)
-                    {
-                        dist = Distances[i][j];
-                        if (!double.IsPositiveInfinity(dist) && dist > max)
-                            max = dist;
-                    }
+                for (var j = i + 1; j < NumberOfSamples; j++)
+                {
+                    dist = Distances[i][j];
+                    if (!double.IsPositiveInfinity(dist) && dist > max)
+                        max = dist;
+                }
 
                 return max;
             }

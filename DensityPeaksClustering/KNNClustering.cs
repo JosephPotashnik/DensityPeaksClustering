@@ -2,15 +2,13 @@
 {
     internal class KNNClustering : DensityPeaksClusteringBase
     {
-        public override DistanceMatrix ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
+        public override DistanceMatrix ComputeRho(DistanceMatrix dMatrix,
+            SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
         {
             var numberOfSamples = dMatrix.NumberOfSamples;
 
             var k = 0;
-            if (args is KNNClusteringArgs knnArgs)
-            {
-                k = knnArgs.k;
-            }
+            if (args is KNNClusteringArgs knnArgs) k = knnArgs.k;
 
             if (k == 0)
                 k = GetKFromNumberOfSamples(numberOfSamples);

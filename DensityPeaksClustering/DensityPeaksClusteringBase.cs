@@ -44,13 +44,15 @@ namespace DensityPeaksClustering
             return samplesClusteringVars.Select(x => x.ClusterIndex).ToArray();
         }
 
-        public abstract DistanceMatrix ComputeRho(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args);
+        public abstract DistanceMatrix ComputeRho(DistanceMatrix dMatrix,
+            SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args);
+
         public abstract void PostProcessing(DensityPeaksClusteringArgs args);
 
         private void ComputeDelta(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars,
             Density[] rhoDescending)
         {
-            double maxDistance = dMatrix.Max;
+            var maxDistance = dMatrix.Max;
 
             samplesClusteringVars[rhoDescending[0].SampleIndex].Delta = maxDistance;
             samplesClusteringVars[rhoDescending[0].SampleIndex].NearestNeighborWithHigherDensity = -1;
@@ -110,7 +112,7 @@ namespace DensityPeaksClustering
             //var potentialClusterCenters = CoarseTuning(samplesClusteringVars, rhoDescending);
             var potentialClusterCenters = new List<int>();
             potentialClusterCenters = potentialClusterCenters.Union(FineTuning(samplesClusteringVars)).ToList();
-  
+
             //assign clusters indices to cluster centers.
             foreach (var i in potentialClusterCenters)
                 samplesClusteringVars[i].ClusterIndex = ++clusterCounter;
