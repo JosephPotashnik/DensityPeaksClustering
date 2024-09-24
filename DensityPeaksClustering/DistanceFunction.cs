@@ -1,10 +1,7 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace DensityPeaksClustering
 {
-    [JsonConverter(typeof(StringEnumConverter))]
     public enum DistanceFunctionType
     {
         EuclideanDistance = 0,

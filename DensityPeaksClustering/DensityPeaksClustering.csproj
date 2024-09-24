@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Authors>Joseph Potashnik</Authors>
     <Company />
     <Product />
@@ -14,9 +14,5 @@ The core algorithm relies on Rodriguez and Laio 2014 (see http://science.science
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Clustering, Density, Density-Based clustering, Density Peaks</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-  </ItemGroup>
 
 </Project>

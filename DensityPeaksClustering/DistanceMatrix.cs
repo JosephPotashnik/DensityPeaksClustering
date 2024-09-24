@@ -1,12 +1,10 @@
 ﻿using System.Linq;
-using Newtonsoft.Json;
 
 namespace DensityPeaksClustering
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public class DistanceMatrix
     {
-        [JsonProperty] public double[][] Distances;
+        public double[][] Distances;
 
         public DistanceMatrix()
         {
