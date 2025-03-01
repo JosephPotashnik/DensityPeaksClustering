@@ -1,4 +1,6 @@
-﻿namespace DensityPeaksClustering
+﻿using System;
+
+namespace DensityPeaksClustering
 {
     public class DensityPeaksClusteringAlgorithms
     {
@@ -22,9 +24,14 @@
         ///     array of cluster indices, with length as the number of samples cluster 0 = noise.
         ///     <see cref="int []" />
         /// </returns>
-        public static int[] MultiManifold(float[][] matrix, int k = 0, int M = 0, ClusterCentersTuningType tuningType = ClusterCentersTuningType.FineTuning,
-            DistanceFunctionType distanceType = DistanceFunctionType.EuclideanDistance)
+        public static int[] MultiManifold(MultiManifoldAlgorithmParams p)
         {
+            float[][] matrix = p.Samples;
+            int k = p.k;
+            int M = p.m;
+            ClusterCentersTuningType tuningType = p.TuningType;
+            DistanceFunctionType distanceType = DistanceFunctionType.EuclideanDistance;
+
             var distanceFunction = DistanceFunctionFactory.CreateDistanceFunction(distanceType);
             var dMatrix = new DistanceMatrix(matrix, distanceFunction);
             var manifoldArgs = new MultiManifoldClusteringArgs(k, M, tuningType);
@@ -47,22 +54,30 @@
         ///     array of cluster indices, with length as the number of samples cluster 0 = noise.
         ///     <see cref="int []" />
         /// </returns>
-        public static int[] KNN(float[][] matrix, int k = 0, ClusterCentersTuningType tuningType = ClusterCentersTuningType.FineTuning,
-            DistanceFunctionType distanceType = DistanceFunctionType.EuclideanDistance)
+        public static int[] KNN(KNNAlgorithmParams p)
         {
+            float[][] matrix = p.Samples;
+            int k = p.k;
+            ClusterCentersTuningType tuningType =p.TuningType;
+            DistanceFunctionType distanceType = DistanceFunctionType.EuclideanDistance;
+
             var distanceFunction = DistanceFunctionFactory.CreateDistanceFunction(distanceType);
             var dMatrix = new DistanceMatrix(matrix, distanceFunction);
             var knnArgs = new KNNClusteringArgs(k, tuningType);
             DensityPeaksClusteringBase clusterizer = new KNNClustering();
-            return clusterizer.Clusterize(dMatrix, knnArgs);
+            var result =  clusterizer.Clusterize(dMatrix, knnArgs);
+            return result;
         }
 
-        /*
+        
         //the matrix matrix is expected to be in the following structure: array of arrays, such that:
         //float[numberOfSamples][numberOfDimensions] 
-        public static int[] DPClustering(float[][] matrix, double cutoffDistance,
-            DistanceFunctionType distanceType = DistanceFunctionType.EuclideanDistance)
+        public static int[] DPClustering(DensityPeaksAlgorithmParams p)
         {
+            float[][] matrix = p.Samples;
+            double cutoffDistance = p.CutoffDistance;
+            DistanceFunctionType distanceType = DistanceFunctionType.EuclideanDistance;
+
             var distanceFunction = DistanceFunctionFactory.CreateDistanceFunction(distanceType);
             var dMatrix = new DistanceMatrix(matrix, distanceFunction);
             DensityPeaksClusteringBase clusterizer = new RodriguezAndLaioDPCClustering();
@@ -87,6 +102,6 @@
             DensityPeaksClusteringBase clusterizer = new MultiManifoldClustering();
             return clusterizer.Clusterize(dMatrix, new DensityPeaksClusteringArgs());
         }
-        */
+        
     }
 }

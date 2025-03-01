@@ -7,9 +7,7 @@ namespace DensityPeaksClustering
         public override DistanceMatrix ComputeRho(DistanceMatrix dMatrix,
             SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
         {
-            throw new NotImplementedException();
-            //eventually return dMatrix (the original distance matrix of the data,
-            //in other implementation the distance matrix is manipulated)
+            return dMatrix;
         }
 
 
