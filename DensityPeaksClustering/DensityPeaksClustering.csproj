@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <VersionPrefix>1.0.2</VersionPrefix>
     <Authors>Joseph Potashnik</Authors>
     <Company />
     <Product />
-    <Description>This package offers several Density-Peaks based algorithms for clustering. 
+    <Description>This package offers several Density-Peaks based algorithms for clustering (including KNN and MultiManifold)
 The core algorithm relies on Rodriguez and Laio 2014 (see http://science.sciencemag.org/content/344/6191/1492.full)
 </Description>
     <RepositoryUrl>https://github.com/JosephPotashnik/DensityPeaksClustering</RepositoryUrl>
@@ -13,6 +14,8 @@ The core algorithm relies on Rodriguez and Laio 2014 (see http://science.science
     <PackageLicenseUrl>https://github.com/JosephPotashnik/DensityPeaksClustering</PackageLicenseUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>Clustering, Density, Density-Based clustering, Density Peaks</PackageTags>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Density Peaks, KNN and Multi Manifold</Title>
   </PropertyGroup>
 
 </Project>
