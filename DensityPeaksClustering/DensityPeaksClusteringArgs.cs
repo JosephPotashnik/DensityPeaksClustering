@@ -33,12 +33,12 @@ namespace DensityPeaksClustering
 
     internal class RodriguezAndLaioDPCClusteringArgs : DensityPeaksClusteringArgs
     {
-        public readonly int distanceCutoff;
+        public readonly int CutoffDistance;
 
         public RodriguezAndLaioDPCClusteringArgs(int dc, ClusterCentersTuningType tuningType = ClusterCentersTuningType.FineTuning) : base(tuningType)
         {
             
-            distanceCutoff = dc;
+            CutoffDistance = dc;
         }
     }
 

@@ -7,6 +7,10 @@ namespace DensityPeaksClustering
         public override DistanceMatrix ComputeRho(DistanceMatrix dMatrix,
             SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args)
         {
+            DensityFunction densityFunction = new PointsUnderDistanceCutoffDistanceDensityFunction();
+            densityFunction.ComputeLocalDensity(dMatrix, samplesClusteringVars, args);
+            //samplesClusteringVars.Rho values are now calculated.
+
             return dMatrix;
         }
 

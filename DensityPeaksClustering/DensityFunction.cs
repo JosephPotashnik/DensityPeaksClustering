@@ -40,7 +40,7 @@
 
             for (var i = 0; i < numberOfSamples - 1; i++)
             for (var j = i + 1; j < numberOfSamples; j++)
-                if (distanceMatrix[i, j] < args1.distanceCutoff)
+                if (distanceMatrix[i, j] < args1.CutoffDistance)
                 {
                     sampleClusteringVars[i].Rho++;
                     sampleClusteringVars[j].Rho++;
