@@ -1,6 +1,6 @@
 # DensityPeaksClustering
 Fast Clustering By Density Peaks (Rodriguez &amp; Laio 2014). .NET Standard library
-
+Available to download via Nuget: DensityPeaksClustering 
 <div>
 <p>
     <img src="screenshots/clusteringResults1.png" width="200" height="240" />
