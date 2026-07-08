@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Content Include="Data\*.csv" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="ReferenceData\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

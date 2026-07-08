@@ -1,0 +1,82 @@
+{
+  "source": {
+    "name": "SIPU / University of Eastern Finland clustering datasets",
+    "url": "https://cs.uef.fi/sipu/datasets/",
+    "note": "Shape-set text files contain x, y, and ground-truth label as the third column."
+  },
+  "distanceMetric": "Euclidean",
+  "currentGoldenParameters": {
+    "knn": {
+      "k": 10,
+      "tuningType": "FineTuning"
+    },
+    "multiManifold": {
+      "k": 10,
+      "m": 10,
+      "tuningType": "FineTuning"
+    },
+    "densityPeaks": {
+      "cutoffDistance": 2.0,
+      "centerSelection": "FineTuning",
+      "useHaloProcessing": true
+    }
+  },
+  "recommendedExternalDpcComparisonParameters": {
+    "density": "count of points with distance < dc",
+    "centerSelection": "TopKGamma",
+    "gamma": "rho * delta",
+    "assignment": "nearest neighbor with higher density",
+    "haloProcessing": "record whether enabled; compare both enabled and disabled if the external implementation supports it",
+    "additionalParametersRequired": [
+      "dc",
+      "k",
+      "distanceMetric",
+      "densityDefinition",
+      "centerSelection",
+      "haloProcessing",
+      "tieHandling"
+    ]
+  },
+  "datasets": [
+    {
+      "name": "Jain",
+      "samplesFile": "Data/Jain.csv",
+      "groundTruthFile": "ReferenceData/SipuGroundTruth/jain.txt",
+      "sourceUrl": "https://cs.uef.fi/sipu/datasets/jain.txt",
+      "points": 373,
+      "expectedClusters": 2
+    },
+    {
+      "name": "Flame",
+      "samplesFile": "Data/flame.csv",
+      "groundTruthFile": "ReferenceData/SipuGroundTruth/flame.txt",
+      "sourceUrl": "https://cs.uef.fi/sipu/datasets/flame.txt",
+      "points": 240,
+      "expectedClusters": 2
+    },
+    {
+      "name": "Pathbased",
+      "samplesFile": "Data/pathBased.csv",
+      "groundTruthFile": "ReferenceData/SipuGroundTruth/pathbased.txt",
+      "sourceUrl": "https://cs.uef.fi/sipu/datasets/pathbased.txt",
+      "points": 300,
+      "expectedClusters": 3
+    },
+    {
+      "name": "Spiral",
+      "samplesFile": "Data/spiral.csv",
+      "groundTruthFile": "ReferenceData/SipuGroundTruth/spiral.txt",
+      "sourceUrl": "https://cs.uef.fi/sipu/datasets/spiral.txt",
+      "points": 312,
+      "expectedClusters": 3
+    },
+    {
+      "name": "Compound/Zahn",
+      "samplesFile": "Data/zahn.csv",
+      "groundTruthFile": "ReferenceData/SipuGroundTruth/Compound.txt",
+      "sourceUrl": "https://cs.uef.fi/sipu/datasets/Compound.txt",
+      "points": 399,
+      "expectedClusters": 6
+    }
+  ]
+}
