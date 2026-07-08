@@ -81,14 +81,26 @@ namespace DensityPeaksClustering
             var distanceFunction = DistanceFunctionFactory.CreateDistanceFunction(distanceType);
             var dMatrix = new DistanceMatrix(matrix, distanceFunction);
             DensityPeaksClusteringBase clusterizer = new RodriguezAndLaioDPCClustering();
-            return clusterizer.Clusterize(dMatrix, new RodriguezAndLaioDPCClusteringArgs((int) cutoffDistance));
+            return clusterizer.Clusterize(dMatrix, new RodriguezAndLaioDPCClusteringArgs(
+                cutoffDistance,
+                clusterCenterIndices: p.ClusterCenterIndices,
+                rhoMin: p.RhoMin,
+                deltaMin: p.DeltaMin,
+                useHaloProcessing: p.UseHaloProcessing));
         }
 
         //Functions From Distance Matrix:
-        public static int[] DPClusteringFromDistanceMatrix(DistanceMatrix dMatrix, double cutoffDistance)
+        public static int[] DPClusteringFromDistanceMatrix(DistanceMatrix dMatrix, double cutoffDistance,
+            int[] clusterCenterIndices = null, double? rhoMin = null, double? deltaMin = null,
+            bool useHaloProcessing = true)
         {
             DensityPeaksClusteringBase clusterizer = new RodriguezAndLaioDPCClustering();
-            return clusterizer.Clusterize(dMatrix, new RodriguezAndLaioDPCClusteringArgs((int) cutoffDistance));
+            return clusterizer.Clusterize(dMatrix, new RodriguezAndLaioDPCClusteringArgs(
+                cutoffDistance,
+                clusterCenterIndices: clusterCenterIndices,
+                rhoMin: rhoMin,
+                deltaMin: deltaMin,
+                useHaloProcessing: useHaloProcessing));
         }
 
         public static int[] DPClusteringWithKNNFromDistanceMatrix(DistanceMatrix dMatrix)

@@ -24,7 +24,8 @@
             return dMatrix;
         }
 
-        public override void PostProcessing(DensityPeaksClusteringArgs args)
+        public override void PostProcessing(DistanceMatrix dMatrix,
+            SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args, int clusterCounter)
         {
         }
     }

@@ -1,5 +1,3 @@
-﻿using System;
-
 namespace DensityPeaksClustering
 {
     internal class RodriguezAndLaioDPCClustering : DensityPeaksClusteringBase
@@ -9,69 +7,61 @@ namespace DensityPeaksClustering
         {
             DensityFunction densityFunction = new PointsUnderDistanceCutoffDistanceDensityFunction();
             densityFunction.ComputeLocalDensity(dMatrix, samplesClusteringVars, args);
-            //samplesClusteringVars.Rho values are now calculated.
-
             return dMatrix;
         }
 
-
-        public override void PostProcessing(DensityPeaksClusteringArgs args)
+        public override void PostProcessing(DistanceMatrix dMatrix,
+            SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args, int clusterCounter)
         {
-            //TODO fix cluster counter - not working now.
-            //clustr counter is computed at FindClusterCenters() - pass it down here.
-            var clusterCounter = 0;
-            AnalyzeNoise(clusterCounter);
+            var dpcArgs = args as RodriguezAndLaioDPCClusteringArgs;
+
+            if (!dpcArgs.UseHaloProcessing)
+                return;
+
+            var maximumBorderDensity = FindMaximumDensitiesInBorderRegion(
+                dMatrix, samplesClusteringVars, clusterCounter, dpcArgs.CutoffDistance);
+
+            ReassignPointsAsNoise(samplesClusteringVars, maximumBorderDensity);
         }
 
-
-        private void AnalyzeNoise(int clusterCounter)
+        private void ReassignPointsAsNoise(SampleClusteringVariables[] samplesClusteringVars,
+            double[] maximumBorderDensity)
         {
-            var maximumborderDensity = FindMaximumDensitiesInBorderRegion(clusterCounter);
+            for (var i = 0; i < samplesClusteringVars.Length; i++)
+            {
+                var currentCluster = samplesClusteringVars[i].ClusterIndex;
 
-            //all points there are less than maximum border density in the cluster 
-            //are re-assigned as noise/suitable to be noise.
-            ReassignPointsAsNoise(maximumborderDensity);
+                if (currentCluster > 0 && samplesClusteringVars[i].Rho < maximumBorderDensity[currentCluster])
+                    samplesClusteringVars[i].ClusterIndex = 0;
+            }
         }
 
-        private void ReassignPointsAsNoise(double[] maximumborderDensity)
+        private double[] FindMaximumDensitiesInBorderRegion(DistanceMatrix dMatrix,
+            SampleClusteringVariables[] samplesClusteringVars, int clusterCounter, double cutoffDistance)
         {
-            //for (int i = 0; i < numberOfSamples - 1; i++)
-            //{
-            //    var currentCluster = samplesClusteringVars[i].ClusterIndex;
+            var maximumBorderDensity = new double[clusterCounter + 1];
+            var numberOfSamples = dMatrix.NumberOfSamples;
 
-            //    if (samplesClusteringVars[i].Rho < maximumborderDensity[currentCluster])
-            //        samplesClusteringVars[i].ClusterIndex = 0; //0 is the noise cluster.
-            //}
-        }
+            for (var i = 0; i < numberOfSamples - 1; i++)
+            for (var j = i + 1; j < numberOfSamples; j++)
+            {
+                var firstCluster = samplesClusteringVars[i].ClusterIndex;
+                var secondCluster = samplesClusteringVars[j].ClusterIndex;
 
-        private double[] FindMaximumDensitiesInBorderRegion(int clusterCounter)
-        {
-            //var args1 = args as RodriguezAndLaioDPCClusteringArgs;
+                if (firstCluster <= 0 || secondCluster <= 0 || firstCluster == secondCluster)
+                    continue;
 
-            var maximumborderDensity = new double[clusterCounter + 1];
-            for (var i = 0; i < clusterCounter + 1; i++)
-                maximumborderDensity[i] = 0;
+                if (dMatrix[i, j] >= cutoffDistance)
+                    continue;
 
-            //for (int i = 0; i < numberOfSamples - 1; i++)
-            //{
-            //    for (int j = i + 1; j < numberOfSamples; j++)
-            //    {
-            //        if (deltaDistanceMatrix[i, j] < args1.distanceCutoff)
-            //        {
-            //            if (samplesClusteringVars[i].ClusterIndex != samplesClusteringVars[j].ClusterIndex)
-            //            {
-            //                if (samplesClusteringVars[i].Rho > maximumborderDensity[samplesClusteringVars[i].ClusterIndex])
-            //                    maximumborderDensity[samplesClusteringVars[i].ClusterIndex] = samplesClusteringVars[i].Rho;
+                if (samplesClusteringVars[i].Rho > maximumBorderDensity[firstCluster])
+                    maximumBorderDensity[firstCluster] = samplesClusteringVars[i].Rho;
 
-            //                if (samplesClusteringVars[j].Rho > maximumborderDensity[samplesClusteringVars[j].ClusterIndex])
-            //                    maximumborderDensity[samplesClusteringVars[j].ClusterIndex] = samplesClusteringVars[j].Rho;
+                if (samplesClusteringVars[j].Rho > maximumBorderDensity[secondCluster])
+                    maximumBorderDensity[secondCluster] = samplesClusteringVars[j].Rho;
+            }
 
-            //            }
-            //        }
-            //    }
-            //}
-
-            return maximumborderDensity;
+            return maximumBorderDensity;
         }
     }
 }

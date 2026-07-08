@@ -33,12 +33,20 @@ namespace DensityPeaksClustering
 
     internal class RodriguezAndLaioDPCClusteringArgs : DensityPeaksClusteringArgs
     {
-        public readonly int CutoffDistance;
+        public readonly double CutoffDistance;
+        public readonly int[] ClusterCenterIndices;
+        public readonly double? RhoMin;
+        public readonly double? DeltaMin;
+        public readonly bool UseHaloProcessing;
 
-        public RodriguezAndLaioDPCClusteringArgs(int dc, ClusterCentersTuningType tuningType = ClusterCentersTuningType.FineTuning) : base(tuningType)
+        public RodriguezAndLaioDPCClusteringArgs(double dc, ClusterCentersTuningType tuningType = ClusterCentersTuningType.FineTuning,
+            int[] clusterCenterIndices = null, double? rhoMin = null, double? deltaMin = null, bool useHaloProcessing = true) : base(tuningType)
         {
-            
             CutoffDistance = dc;
+            ClusterCenterIndices = clusterCenterIndices;
+            RhoMin = rhoMin;
+            DeltaMin = deltaMin;
+            UseHaloProcessing = useHaloProcessing;
         }
     }
 

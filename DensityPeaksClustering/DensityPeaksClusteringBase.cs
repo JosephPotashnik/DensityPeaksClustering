@@ -37,7 +37,7 @@ namespace DensityPeaksClustering
 
             ////6. after all clusters have been found, postprocessing
             //in the original DPC algorithm, we assign noise in border regions.
-            PostProcessing(args);
+            PostProcessing(deltaDistanceMatrix, samplesClusteringVars, args, clusterCounter);
 
             return samplesClusteringVars.Select(x => x.ClusterIndex).ToArray();
         }
@@ -45,7 +45,8 @@ namespace DensityPeaksClustering
         public abstract DistanceMatrix ComputeRho(DistanceMatrix dMatrix,
             SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args);
 
-        public abstract void PostProcessing(DensityPeaksClusteringArgs args);
+        public abstract void PostProcessing(DistanceMatrix dMatrix,
+            SampleClusteringVariables[] samplesClusteringVars, DensityPeaksClusteringArgs args, int clusterCounter);
 
         private void ComputeDelta(DistanceMatrix dMatrix, SampleClusteringVariables[] samplesClusteringVars,
             Density[] rhoDescending)
@@ -109,27 +110,60 @@ namespace DensityPeaksClustering
             var potentialClusterCentersCoarse = new List<int>();
             var potentialClusterCentersFine = new List<int>();
             var potentialClusterCenters = new List<int>();
+            var explicitClusterCenters = GetExplicitClusterCenters(samplesClusteringVars, args);
 
-            bool coarseTuning = args.TuningType.HasFlag(ClusterCentersTuningType.CoarseTuning);
-            bool fineTuning = args.TuningType.HasFlag(ClusterCentersTuningType.FineTuning);
-
-            if (coarseTuning)
-                potentialClusterCentersCoarse = CoarseTuning(samplesClusteringVars, rhoDescending);
-            else if (fineTuning)
-                potentialClusterCentersFine = FineTuning(samplesClusteringVars);
-
-            //if both tunings methods are used, intersect their results
-            if (coarseTuning && fineTuning)
-                potentialClusterCenters = potentialClusterCentersFine.Intersect(potentialClusterCentersCoarse).ToList();
-            //otherwise just use result of one of them (the other one is an empty list).
+            if (explicitClusterCenters != null)
+                potentialClusterCenters = explicitClusterCenters;
             else
-                potentialClusterCenters = potentialClusterCentersFine.Union(potentialClusterCentersCoarse).ToList();
+            {
+                bool coarseTuning = args.TuningType.HasFlag(ClusterCentersTuningType.CoarseTuning);
+                bool fineTuning = args.TuningType.HasFlag(ClusterCentersTuningType.FineTuning);
+
+                if (coarseTuning)
+                    potentialClusterCentersCoarse = CoarseTuning(samplesClusteringVars, rhoDescending);
+                if (fineTuning)
+                    potentialClusterCentersFine = FineTuning(samplesClusteringVars);
+
+                //if both tunings methods are used, intersect their results
+                if (coarseTuning && fineTuning)
+                    potentialClusterCenters = potentialClusterCentersFine.Intersect(potentialClusterCentersCoarse).ToList();
+                //otherwise just use result of one of them (the other one is an empty list).
+                else
+                    potentialClusterCenters = potentialClusterCentersFine.Union(potentialClusterCentersCoarse).ToList();
+            }
  
             //assign clusters indices to cluster centers.
             foreach (var i in potentialClusterCenters)
                 samplesClusteringVars[i].ClusterIndex = ++clusterCounter;
 
             return clusterCounter;
+        }
+
+        private List<int> GetExplicitClusterCenters(SampleClusteringVariables[] samplesClusteringVars,
+            DensityPeaksClusteringArgs args)
+        {
+            if (!(args is RodriguezAndLaioDPCClusteringArgs dpcArgs))
+                return null;
+
+            if (dpcArgs.ClusterCenterIndices != null && dpcArgs.ClusterCenterIndices.Length > 0)
+            {
+                foreach (var centerIndex in dpcArgs.ClusterCenterIndices)
+                    if (centerIndex < 0 || centerIndex >= samplesClusteringVars.Length)
+                        throw new ArgumentOutOfRangeException(nameof(dpcArgs.ClusterCenterIndices),
+                            "Cluster center indices must refer to existing samples.");
+
+                return dpcArgs.ClusterCenterIndices.Distinct().ToList();
+            }
+
+            if (!dpcArgs.RhoMin.HasValue && !dpcArgs.DeltaMin.HasValue)
+                return null;
+
+            return samplesClusteringVars
+                .Select((x, index) => new { Sample = x, Index = index })
+                .Where(x => (!dpcArgs.RhoMin.HasValue || x.Sample.Rho >= dpcArgs.RhoMin.Value)
+                            && (!dpcArgs.DeltaMin.HasValue || x.Sample.Delta >= dpcArgs.DeltaMin.Value))
+                .Select(x => x.Index)
+                .ToList();
         }
 
         private List<int> CoarseTuning(SampleClusteringVariables[] samplesClusteringVars, Density[] rhoDescending)

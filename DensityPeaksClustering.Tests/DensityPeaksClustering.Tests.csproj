@@ -22,4 +22,8 @@
     <ProjectReference Include="..\DensityPeaksClustering\DensityPeaksClustering.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Data\*.csv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

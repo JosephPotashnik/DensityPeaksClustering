@@ -34,6 +34,61 @@ public class DensityPeaksClusteringAlgorithmsTests
     }
 
     [Fact]
+    public void DPClustering_WithExplicitClusterCenters_UsesProvidedCenters()
+    {
+        var samples = TwoCompactGroups();
+
+        var labels = DensityPeaksClusteringAlgorithms.DPClustering(new DensityPeaksAlgorithmParams
+        {
+            Samples = samples,
+            CutoffDistance = 2,
+            ClusterCenterIndices = new[] { 0, 3 },
+            UseHaloProcessing = false
+        });
+
+        Assert.Equal(new[] { 1, 1, 1, 2, 2, 2 }, labels);
+    }
+
+    [Fact]
+    public void DPClusteringFromDistanceMatrix_WithExplicitClusterCenters_MatchesSampleBasedApi()
+    {
+        var samples = TwoCompactGroups();
+        var distanceMatrix = new DistanceMatrix(samples, new EuclideanDistanceFunction());
+
+        var fromSamples = DensityPeaksClusteringAlgorithms.DPClustering(new DensityPeaksAlgorithmParams
+        {
+            Samples = samples,
+            CutoffDistance = 2,
+            ClusterCenterIndices = new[] { 0, 3 },
+            UseHaloProcessing = false
+        });
+        var fromMatrix = DensityPeaksClusteringAlgorithms.DPClusteringFromDistanceMatrix(
+            distanceMatrix,
+            2,
+            clusterCenterIndices: new[] { 0, 3 },
+            useHaloProcessing: false);
+
+        Assert.Equal(fromSamples, fromMatrix);
+    }
+
+    [Fact]
+    public void DPClustering_WithThresholdsMatchingNoCenters_ReturnsOnlyNoise()
+    {
+        var samples = TwoCompactGroups();
+
+        var labels = DensityPeaksClusteringAlgorithms.DPClustering(new DensityPeaksAlgorithmParams
+        {
+            Samples = samples,
+            CutoffDistance = 2,
+            RhoMin = 100,
+            DeltaMin = 100,
+            UseHaloProcessing = false
+        });
+
+        Assert.Equal(new[] { 0, 0, 0, 0, 0, 0 }, labels);
+    }
+
+    [Fact]
     public void KNN_ReturnsOneClusterLabelPerSample()
     {
         var samples = TwoCompactGroups();
